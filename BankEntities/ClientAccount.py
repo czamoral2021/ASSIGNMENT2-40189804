@@ -14,7 +14,7 @@ class ClientAccount:
         self.account_type = account_type
         self.account_status = "inactive"
         self.monthly_service_charge = 0
-        self.annual_interest_rate = 0.24
+        self.annual_interest_rate = 0.024
         # 2.4 % annual
         # _ underscore means private, you cannot assign values directly, calculated values or keys
 
@@ -54,18 +54,23 @@ class ClientAccount:
     def get_annual_interest_rate(self):
         return self.annual_interest_rate
 
-    def withdraw(self, operation_amount):
-        if self.balance >= operation_amount:
-            self.balance = self.balance - operation_amount
+    def withdraw(self, amount):
+        if self.balance > 25 and self.balance > amount:
+            self.balance = self.balance - amount
             self.num_withdrawals += 1
-            self.total_withdrawals = self.total_withdrawals + operation_amount
+            self.total_withdrawals = self.total_withdrawals + amount
         else:
             print("Cannot withdraw, balance is < withdraw amount")
 
-    def deposit(self, operation_amount):
-        self.balance = self.balance + operation_amount
+    def deposit(self, amount):
+        self.balance = self.balance + amount
         self.num_deposits += 1
-        self.total_deposits = self.total_deposits + operation_amount
+        self.total_deposits = self.total_deposits + amount
+
+    def daily_interest(self):
+        daily_interest_rate = (self.annual_interest_rate / 365)
+        daily_interest = self.balance * daily_interest_rate
+        self.balance = self.balance + daily_interest
 
     def monthly_interest(self):
         monthly_interest_rate = self.annual_interest_rate / 12
@@ -76,8 +81,8 @@ class ClientAccount:
         x = datetime.datetime.now()
         first_day = x.replace(day=1)
         end_day = datetime.date(x.year + x.month // 12, x.month % 12 + 1, 1) - datetime.timedelta(1)
-        # self.monthly_service_charge = self.monthly_service_charge + charges_amount
-        self.balance = self.balance - self.monthly_service_charge
+        if x.day == end_day.day:
+            self.monthly_interest()
         print("------------------------------------------------------------------------------------------------------------")
         if x.strftime("%d") == end_day.strftime("%d"):
             print(x.strftime("%B") + " - End of month. Report date: " + x.strftime("%c"))
@@ -96,12 +101,13 @@ class ClientAccount:
         print(f"Number of withdrawals: {self.get_num_withdrawals()}")
         print("Total deposits {:,.2f} $".format(self.get_total_deposits()))
         print("Total withdrawals {:,.2f} $".format(self.get_total_withdrawals()))
-        print(f"Annual interest rate : {self.get_annual_interest_rate():.2f}")
+        print(f"Annual interest rate : {self.get_annual_interest_rate():.3f}")
         print("Start Date: " + (x.strftime("%m")) + "-" + (first_day.strftime("%d")) + "-" + (x.strftime("%Y")))
         print("End Date: " + (end_day.strftime("%m")) + "-" + (end_day.strftime("%d")) + "-" + (end_day.strftime("%Y")))
         print("------------------------------------------------------------------------------------------------------------")
         print("Op.Num. | Deposit          | Withdrawal      | Service charge  | Operation date           | Balance")
         print("------------------------------------------------------------------------------------------------------------")
+        self.balance = self.start_balance
         return
 
 

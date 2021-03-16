@@ -20,9 +20,8 @@
 # of withdrawals, number of deposits, and monthly service charges to zero. See
 # below what the report should print out to the user!
 
-# Exercise with a General account, multiple transactions (Deposits, Withdrawals,
-# max 10, calculate monthly rate and a simple report
-# in order to test this specific class
+# Exercise with a General account, multiple transactions (Deposits, Withdrawals, etc)
+# for each deposit it will add a daily interest
 
 import datetime
 from BankEntities.ClientAccount import ClientAccount
@@ -37,6 +36,7 @@ bank_trans = ""
 v_amount = ""
 v_service_charge = 0
 while True:
+    print("BANK GAME")
     bank_trans = input("""What kind of transactions? :.
             d(deposit) w(withdraw)
             p(print current balance and report) q(quit): """)
@@ -52,8 +52,10 @@ while True:
             print("Operation amount is not numeric")
         else:
             v_operation_date = datetime.datetime.now()
-            account1.deposit(operation_amount=float(v_amount))
-            account1.monthly_interest()
+            print("Balance deposit: " + str(account1.balance))
+            account1.deposit(amount=float(v_amount))
+            account1.daily_interest()
+            print("Balance AFTER d: " + str(account1.balance))
             trans_number += 1
             trans_deposits += 1
             account1.account_status = "active"
@@ -67,7 +69,9 @@ while True:
             print("Operation amount is not numeric")
         else:
             v_operation_date = datetime.datetime.now()
-            account1.withdraw(operation_amount=float(v_amount))
+            print("Balance before w: " + str(account1.balance))
+            account1.withdraw(amount=float(v_amount))
+            print("Balance AFTER w: " + str(account1.balance))
             trans_number += 1
             trans_withdrawals += 1
             account1.account_status = "active"
@@ -75,6 +79,7 @@ while True:
             if trans_withdrawals > 4:
                 v_service_charge += 1
                 account1.monthly_service_charge = account1.monthly_service_charge + 1.00
+                account1.balance = account1.balance - v_service_charge
                 # 1 $ after more than 4 withdrawals
             trans_list.append([trans_number, "w", v_amount, v_service_charge, v_operation_date, account1.balance])
             # list first position is zero (0) transaction # and transaction amount for each element on the list
@@ -89,42 +94,16 @@ while True:
                 print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                 print("{0:17}".format(" ") + "|", end="")
             elif t[1] == "w":
-                print("{0:17}".format(" ") + "|", end="")
-                print("{:16,.2f} $".format(float(t[2])) + "|", end="")
+                print("{0:18}".format(" ") + "|", end="")
+                print("{:15,.2f} $".format(float(t[2])) + "|", end="")
             print("{:15,.2f} $".format(float(t[3])) + "|", end="")
             print("{}".format(t[4].strftime("%c")) + "  |", end="")
             print("{:15,.2f} $".format(float(t[5])))
             print("------------------------------------------------------------------------------------------------------------")
-            ##
+            trans_number = 0
+            trans_withdrawals = 0
+            trans_deposits = 0
+            trans_list = []
 
 
-# grades = [70, 72, 80, 81, 66, 67]
-# grades_better = [
-#     [70,72],
-#     [80,81],
-#     [66,67]]
-#
-# for s in grades_better:
-#     grade_midterm = s[0]
-#     grade_final = s[1]
-#     av = (grade_midterm + grade_final) / 2
-#     print(av)
 
-# print("The total items added are ", end="")
-# print(sum(item_list))
-# print("The total items added are {}".format(sum(item_list)))
-
-# v_annual_interest_rate = account1.get_annual_interest_rate()
-# print("BANK ACCOUNT: ")
-# print(account1.get_bank_account())
-# print(account1.get_client_name())
-# print("{:,.2f} $".format(account1.get_balance()))
-# print("{:,.2f} $".format(account1.get_start_balance()))
-# print(account1.get_account_status())
-# print(account1.get_num_deposits())
-# print(account1.get_num_withdrawals())
-# print("{:,.2f} $".format(account1.get_total_deposits()))
-# print("{:,.2f} $".format(account1.get_total_withdrawals()))
-# print("{:,.2f} $".format(account1.get_monthly_service_charge()))
-# print(f"{account1.get_annual_interest_rate():.2f}")
-# print()

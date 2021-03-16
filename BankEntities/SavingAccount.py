@@ -19,24 +19,24 @@ class SavingAccount(ClientAccount):
         self.operation_amount = operation_amount
         super().__init__(bank_account, account_type, client_name, input_amount)
 
-    def withdraw(self, operation_amount):
+    def withdraw(self, amount):
         if self.account_status == "inactive" and self.balance > 25:
             self.account_status = "active"
         elif self.account_status == "inactive" and self.balance <= 25:
             print("The saving account balance is not above 25.00 $, no withdrawals allowed")
         if self.account_status == "active" and self.balance > 25:
-            super().withdraw(operation_amount)
+            super().withdraw(amount)
             if self.balance <= 25:
                 self.account_status = "inactive"
 
-    def deposit(self, operation_amount):
+    def deposit(self, amount):
         if self.account_status == "inactive":
-            if self.balance + operation_amount > 25:
+            if self.balance + amount > 25:
                 self.account_status = "active"
             else:
                 print("The deposit is too low, the new balance should be greater than 25.00 $")
         else:
-            super().deposit(operation_amount)
+            super().deposit(amount)
 
 
 # account1 = SavingAccount("0002", "Check", "Husam kasem", 21, 0)

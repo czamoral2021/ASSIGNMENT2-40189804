@@ -17,14 +17,14 @@ class CheckingAccount(ClientAccount):
         self.operation_amount = operation_amount
         super().__init__(bank_account, account_type, client_name, input_amount)
 
-    def withdraw(self, operation_amount):
+    def withdraw(self, amount):
         self.account_status = "active"
-        if self.balance - operation_amount < 0:
+        if self.balance - amount < 0:
             print("Cannot withdraw")
             self.balance = self.balance - 15
             print("penalty 15.00 $")
         else:
-            super().withdraw(operation_amount)
+            super().withdraw(amount)
 
 
 # account1 = CheckingAccount("0002", "Check", "Husam kasem", 32000, 0)

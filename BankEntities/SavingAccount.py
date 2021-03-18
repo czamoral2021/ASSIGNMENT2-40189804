@@ -15,26 +15,36 @@ from BankEntities.ClientAccount import ClientAccount
 
 
 class SavingAccount(ClientAccount):
-    def __init__(self, bank_account, client_name, input_amount, operation_amount):
-        self.operation_amount = operation_amount
+    def __init__(self, bank_account, client_name, input_amount, saving_flag):
+        self.saving_flag = saving_flag
         super().__init__(bank_account, client_name, input_amount)
 
     def withdraw(self, amount):
-        if self.account_status == "inactive" and self.balance > 25:
+        if self.account_status == "inactive" and self.balance - amount > 25:
             self.account_status = "active"
-        elif self.account_status == "inactive" and self.balance <= 25:
-            print("The saving account balance is not above 25.00 $, no withdrawals allowed")
-        if self.account_status == "active" and self.balance > 25:
             super().withdraw(amount)
-            if self.balance <= 25:
-                self.account_status = "inactive"
+        elif self.account_status == "inactive" and self.balance - amount <= 25:
+            # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
+            self.saving_flag = False
+            return self.saving_flag
+        if self.account_status == "active":
+            if self.balance - amount > 25:
+                super().withdraw(amount)
+            else:
+                # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
+                self.saving_flag = False
+                return self.saving_flag
 
     def deposit(self, amount):
         if self.account_status == "inactive":
             if self.balance + amount > 25:
                 self.account_status = "active"
+                super().deposit(amount)
             else:
-                print("The deposit is too low, the new balance should be greater than 25.00 $")
+                # print("The deposit is too low, the new balance should be greater than 25.00 $")
+                self.account_status = "inactive"
+                self.saving_flag = False
+                return self.saving_flag
         else:
             super().deposit(amount)
 

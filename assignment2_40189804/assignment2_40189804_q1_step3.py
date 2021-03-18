@@ -17,10 +17,142 @@
 # active again.
 
 
-# Exercise with a Saving account, multiple transactions (Deposits, Withdrawals,
-# max 10, calculate monthly rate and a simple report
-# in order to test this specific class
-print()
-print("A")
+# Exercise with a Savings account, multiple transactions (Deposits, Withdrawals, etc)
+# for each deposit it will add a daily interest
 
+# from BankEntities.ClientAccount import *
+import datetime
+
+from BankEntities.SavingAccount import SavingAccount
+
+# account1 = SavingAccount("0003", "Hasan Abas", 67000)
+account1 = SavingAccount("0003", "Hasan Abas", 10, True)
+
+trans_number = 0
+# trans_amount = 0
+trans_withdrawals = 0
+trans_deposits = 0
+trans_list = []
+trans_type = ""
+
+v_amount = ""
+v_service_charge = 0
+v_balance = 0
+
+v_boolean_bank_menu = True
+v_boolean_account_menu = True
+while v_boolean_bank_menu:
+    # Bank Menu This leads to
+    # another menu (account menu)
+    print("BANK MENU")
+    print("A: Savings")
+    # print("B: Checking")
+    print("C: Exit")
+    menu_bank = input("Enter a valid choice - uppercase and lowercase, invalid --> Main Menu > ")
+    if menu_bank == "A" or menu_bank == "a":
+        v_account_type = "Savings"
+    # elif menu_bank == "B" or menu_bank == "b":
+    #     v_account_type = "Checking"
+    #     print("Testing Saving Account Only - Exiting program")
+    #     break
+    elif menu_bank == "C" or menu_bank == "c":
+        print("Exiting program")
+        break
+    else:
+        continue
+    # Working with account type now
+    while v_boolean_account_menu:
+        print(v_account_type.upper() + " MENU")
+        print("A: Deposit")
+        print("B: Withdrawals")
+        print("C: Report")
+        print("D: Go back to BANK MENU")
+        menu_account = input("Enter a valid choice - uppercase and lowercase, invalid --> Bank Menu > ")
+        if menu_account.upper() == "A":
+            print("Working with " + v_account_type.upper() + " MENU - A: Deposit")
+            v_amount = input("Operation amount, please > ")
+            # validate the operation amount
+            if not v_amount.isnumeric():
+                print("Operation amount is not numeric")
+            else:
+                trans_type = "d"
+                trans_amount = v_amount
+                print("AMOUNT: " + str(trans_amount))
+                v_operation_date = datetime.datetime.now()
+                print("Balance deposit: " + str(account1.balance))
+                account1.deposit(amount=float(v_amount))
+                print("Balance AFTER d: " + str(account1.balance))
+                trans_number += 1
+                print("Flag :" + str(account1.saving_flag))
+                if not account1.saving_flag:
+                    print("The deposit is too low, the new balance should be greater than 25.00 $")
+                    v_balance = account1.balance
+                elif account1.saving_flag:
+                    account1.daily_interest()
+                    v_balance = account1.balance
+                    trans_deposits += 1
+                    account1.num_deposits = trans_deposits
+                    account1.account_status = "active"
+
+                trans_list.append(
+                        [trans_number, trans_type, trans_amount, v_service_charge, v_operation_date, v_balance])
+                # list first position is zero (0) transaction # and transaction amount for each element on the list
+
+        elif menu_account.upper() == "B":
+            print("Working with " + v_account_type.upper() + " MENU - B: Withdrawals")
+            v_amount = input("Operation amount, please > ")
+            # validate the operation amount
+            if not v_amount.isnumeric():
+                print("Operation amount is not numeric")
+            else:
+                trans_type = "w"
+                trans_amount = v_amount
+                print("AMOUNT: " + str(trans_amount))
+                v_operation_date = datetime.datetime.now()
+                print("Balance before w: " + str(account1.balance))
+                account1.withdraw(amount=float(v_amount))
+                print("Balance AFTER w: " + str(account1.balance))
+                trans_number += 1
+                print("Flag :" + str(account1.saving_flag))
+                if not account1.saving_flag:
+                    print("The saving account balance is not above 25.00 $, no withdrawals allowed")
+                    v_balance = account1.balance
+                elif account1.saving_flag:
+                    v_balance = account1.balance
+                    trans_withdrawals += 1
+                    account1.num_withdrawals = trans_withdrawals
+                    account1.account_status = "active"
+                    if trans_withdrawals > 4:
+                        v_service_charge = 1
+                        account1.monthly_service_charge = account1.monthly_service_charge + 1.00
+                        print("Balance before PENALTY: " + str(account1.balance))
+                        account1.balance = account1.balance - v_service_charge
+                        print("Balance after PENALTY: " + str(account1.balance))
+                        # 1 $ after more than 4 withdrawals
+
+                trans_list.append(
+                        [trans_number, trans_type, trans_amount, v_service_charge, v_operation_date, v_balance])
+                        # list first position is zero (0) transaction # and transaction amount for each element on the list
+
+        elif menu_account.upper() == "C":
+            print("Working with " + v_account_type.upper() + " MENU - C: Report")
+            account1.monthly_report()
+            for t in trans_list:
+                print("{0:8}".format(t[0]) + "|", end="")
+                if t[1] == "d":
+                    print("{:16,.2f} $".format(float(t[2])) + "|", end="")
+                    print("{0:17}".format(" ") + "|", end="")
+                elif t[1] == "w":
+                    print("{0:18}".format(" ") + "|", end="")
+                    print("{:15,.2f} $".format(float(t[2])) + "|", end="")
+                print("{:15,.2f} $".format(float(t[3])) + "|", end="")
+                print("{}".format(t[4].strftime("%c")) + "  |", end="")
+                print("{:15,.2f} $".format(float(t[5])))
+                print("-" * 109)
+                account1.balance = v_balance
+        elif menu_account == "D" or menu_account == "d":
+            print("Go to previous menu")
+            break
+        else:
+            break
 

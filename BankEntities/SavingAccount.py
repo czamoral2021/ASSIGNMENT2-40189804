@@ -15,9 +15,9 @@ from BankEntities.ClientAccount import ClientAccount
 
 
 class SavingAccount(ClientAccount):
-    def __init__(self, bank_account, account_type, client_name, input_amount, operation_amount):
+    def __init__(self, bank_account, client_name, input_amount, operation_amount):
         self.operation_amount = operation_amount
-        super().__init__(bank_account, account_type, client_name, input_amount)
+        super().__init__(bank_account, client_name, input_amount)
 
     def withdraw(self, amount):
         if self.account_status == "inactive" and self.balance > 25:

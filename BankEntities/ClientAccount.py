@@ -2,7 +2,7 @@ import datetime
 
 
 class ClientAccount:
-    def __init__(self, bank_account, account_type, client_name, input_amount=0):
+    def __init__(self, bank_account, client_name, input_amount=0):
         self.balance = input_amount
         self.start_balance = input_amount
         self.num_deposits = 0
@@ -11,7 +11,7 @@ class ClientAccount:
         self.total_withdrawals = 0
         self.bank_account = bank_account
         self.client_name = client_name
-        self.account_type = account_type
+        self.account_type = "general"
         self.account_status = "inactive"
         self.monthly_service_charge = 0
         self.annual_interest_rate = 0.024
@@ -43,7 +43,7 @@ class ClientAccount:
         return self.client_name
 
     def get_account_type(self):
-        return self.account_type
+        return self.account_type.title()
 
     def get_account_status(self):
         return self.account_status.title()

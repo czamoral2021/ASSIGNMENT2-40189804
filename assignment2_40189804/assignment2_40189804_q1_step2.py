@@ -26,7 +26,7 @@
 import datetime
 from BankEntities.ClientAccount import ClientAccount
 
-account1 = ClientAccount("0002", "Check", "Husam kasem", 32000)
+account1 = ClientAccount("0002", "Husam kasem", 32000)
 
 trans_number = 0
 trans_withdrawals = 0
@@ -35,12 +35,17 @@ trans_list = []
 bank_trans = ""
 v_amount = ""
 v_service_charge = 0
+v_balance = 0
 while True:
     print("BANK GAME")
     bank_trans = input("""What kind of transactions? :.
             d(deposit) w(withdraw)
             p(print current balance and report) q(quit): """)
     if bank_trans == 'q' or bank_trans == 'Q':
+        trans_number = 0
+        trans_withdrawals = 0
+        trans_deposits = 0
+        trans_list = []
         break
     elif bank_trans.upper() != "D" and bank_trans.upper() != "W" and bank_trans.upper() != "P":
         print("This choice is not valid, try again please")
@@ -60,7 +65,8 @@ while True:
             trans_deposits += 1
             account1.account_status = "active"
             account1.num_deposits = trans_deposits
-            trans_list.append([trans_number, "d", v_amount, v_service_charge, v_operation_date, account1.balance])
+            v_balance = account1.balance
+            trans_list.append([trans_number, "d", v_amount, v_service_charge, v_operation_date, v_balance])
             # list first position is zero (0) transaction # and transaction amount for each element on the list
     if bank_trans == 'w' or bank_trans == 'W':
         v_amount = input("Operation amount, please > ")
@@ -72,6 +78,7 @@ while True:
             print("Balance before w: " + str(account1.balance))
             account1.withdraw(amount=float(v_amount))
             print("Balance AFTER w: " + str(account1.balance))
+            v_balance = account1.balance
             trans_number += 1
             trans_withdrawals += 1
             account1.account_status = "active"
@@ -79,9 +86,12 @@ while True:
             if trans_withdrawals > 4:
                 v_service_charge += 1
                 account1.monthly_service_charge = account1.monthly_service_charge + 1.00
+                print("Balance before PENALTY: " + str(account1.balance))
                 account1.balance = account1.balance - v_service_charge
+                print("Balance after PENALTY: " + str(account1.balance))
                 # 1 $ after more than 4 withdrawals
-            trans_list.append([trans_number, "w", v_amount, v_service_charge, v_operation_date, account1.balance])
+            v_balance = account1.balance
+            trans_list.append([trans_number, "w", v_amount, v_service_charge, v_operation_date, v_balance])
             # list first position is zero (0) transaction # and transaction amount for each element on the list
     if bank_trans == 'p' or bank_trans == 'P':
         account1.monthly_report()
@@ -100,10 +110,14 @@ while True:
             print("{}".format(t[4].strftime("%c")) + "  |", end="")
             print("{:15,.2f} $".format(float(t[5])))
             print("------------------------------------------------------------------------------------------------------------")
-            trans_number = 0
-            trans_withdrawals = 0
-            trans_deposits = 0
-            trans_list = []
+            account1.balance = v_balance
+            # Activate this section to test quickly
+            # trans_number = 0
+            # trans_withdrawals = 0
+            # trans_deposits = 0
+            # trans_list = []
+            # Activate this section to test quickly
+
 
 
 

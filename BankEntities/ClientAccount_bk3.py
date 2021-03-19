@@ -55,7 +55,7 @@ class ClientAccount:
         return self.annual_interest_rate
 
     def withdraw(self, amount):
-        if self.balance > 25 and self.balance > amount:
+        if self.balance > amount:
             self.balance = self.balance - amount
             self.num_withdrawals += 1
             self.total_withdrawals = self.total_withdrawals + amount

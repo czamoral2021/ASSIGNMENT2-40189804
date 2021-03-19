@@ -29,7 +29,7 @@ from BankEntities.SavingAccount import SavingAccount
 account1 = SavingAccount("0003", "Hasan Abas", 10, True)
 
 trans_number = 0
-# trans_amount = 0
+trans_flag = True
 trans_withdrawals = 0
 trans_deposits = 0
 trans_list = []
@@ -76,14 +76,15 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric")
             else:
                 trans_type = "d"
-                trans_amount = v_amount
-                print("AMOUNT: " + str(trans_amount))
+                # trans_amount = v_amount
+                print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
                 print("Balance deposit: " + str(account1.balance))
                 account1.deposit(amount=float(v_amount))
                 print("Balance AFTER d: " + str(account1.balance))
                 trans_number += 1
                 print("Flag :" + str(account1.saving_flag))
+                trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The deposit is too low, the new balance should be greater than 25.00 $")
                     v_balance = account1.balance
@@ -95,7 +96,7 @@ while v_boolean_bank_menu:
                     account1.account_status = "active"
 
                 trans_list.append(
-                        [trans_number, trans_type, trans_amount, v_service_charge, v_operation_date, v_balance])
+                        [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
                 # list first position is zero (0) transaction # and transaction amount for each element on the list
 
         elif menu_account.upper() == "B":
@@ -106,14 +107,15 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric")
             else:
                 trans_type = "w"
-                trans_amount = v_amount
-                print("AMOUNT: " + str(trans_amount))
+                # trans_amount = v_amount
+                print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
                 print("Balance before w: " + str(account1.balance))
                 account1.withdraw(amount=float(v_amount))
                 print("Balance AFTER w: " + str(account1.balance))
                 trans_number += 1
                 print("Flag :" + str(account1.saving_flag))
+                trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The saving account balance is not above 25.00 $, no withdrawals allowed")
                     v_balance = account1.balance
@@ -131,7 +133,7 @@ while v_boolean_bank_menu:
                         # 1 $ after more than 4 withdrawals
 
                 trans_list.append(
-                        [trans_number, trans_type, trans_amount, v_service_charge, v_operation_date, v_balance])
+                        [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
                         # list first position is zero (0) transaction # and transaction amount for each element on the list
 
         elif menu_account.upper() == "C":
@@ -143,13 +145,19 @@ while v_boolean_bank_menu:
                     print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                     print("{0:17}".format(" ") + "|", end="")
                 elif t[1] == "w":
-                    print("{0:18}".format(" ") + "|", end="")
-                    print("{:15,.2f} $".format(float(t[2])) + "|", end="")
+                    if t[6]:
+                        print("{0:18}".format(" ") + "|", end="")
+                        print("{:15,.2f} $".format(float(t[2])) + "|", end="")
+                    else:
+                        print("Cannot withdraw-->" + "|", end="")
+                        # Cannot withdraw
+                        print("{:15,.2f} $".format(float(t[2])) + "|", end="")
                 print("{:15,.2f} $".format(float(t[3])) + "|", end="")
                 print("{}".format(t[4].strftime("%c")) + "  |", end="")
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
                 account1.balance = v_balance
+                # account1.saving_flag = trans_flag
         elif menu_account == "D" or menu_account == "d":
             print("Go to previous menu")
             break

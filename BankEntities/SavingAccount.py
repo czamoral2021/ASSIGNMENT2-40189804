@@ -23,30 +23,36 @@ class SavingAccount(ClientAccount):
         if self.account_status == "inactive" and self.balance - amount > 25:
             self.account_status = "active"
             super().withdraw(amount)
+            self.saving_flag = True
         elif self.account_status == "inactive" and self.balance - amount <= 25:
             # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
             self.saving_flag = False
-            return self.saving_flag
         if self.account_status == "active":
             if self.balance - amount > 25:
                 super().withdraw(amount)
+                self.saving_flag = True
             else:
                 # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
                 self.saving_flag = False
-                return self.saving_flag
+        return self.saving_flag
 
     def deposit(self, amount):
         if self.account_status == "inactive":
             if self.balance + amount > 25:
                 self.account_status = "active"
                 super().deposit(amount)
+                self.saving_flag = True
             else:
                 # print("The deposit is too low, the new balance should be greater than 25.00 $")
-                self.account_status = "inactive"
                 self.saving_flag = False
-                return self.saving_flag
-        else:
+        elif self.balance + amount > 25:
             super().deposit(amount)
+            self.saving_flag = True
+        else:
+            # print("The deposit is too low, the new balance should be greater than 25.00 $")
+            self.account_status = "inactive"
+            self.saving_flag = False
+        return self.saving_flag
 
 
 # account1 = SavingAccount("0002", "Check", "Husam kasem", 21, 0)

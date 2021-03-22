@@ -25,14 +25,14 @@ class SavingAccount(ClientAccount):
             super().withdraw(amount)
             self.saving_flag = True
         elif self.account_status == "inactive" and self.balance - amount <= 25:
-            # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
+            # "The saving account balance is not above 25.00 $, no withdrawals allowed"
             self.saving_flag = False
         if self.account_status == "active":
             if self.balance - amount > 25:
                 super().withdraw(amount)
                 self.saving_flag = True
             else:
-                # print("The saving account balance is not above 25.00 $, no withdrawals allowed")
+                # "The saving account balance is not above 25.00 $, no withdrawals allowed"
                 self.saving_flag = False
         return self.saving_flag
 

@@ -25,7 +25,6 @@ import datetime
 
 from BankEntities.SavingAccount import SavingAccount
 
-# account1 = SavingAccount("0003", "Hasan Abas", 67000)
 account1 = SavingAccount("0003", "Hasan Abas", 10, True)
 
 trans_number = 0
@@ -54,10 +53,6 @@ while v_boolean_bank_menu:
     menu_bank = input("Enter a valid choice - uppercase and lowercase, invalid --> Main Menu > ")
     if menu_bank == "A" or menu_bank == "a":
         v_account_type = "Savings"
-    # elif menu_bank == "B" or menu_bank == "b":
-    #     v_account_type = "Checking"
-    #     print("Testing Saving Account Only - Exiting program")
-    #     break
     elif menu_bank == "C" or menu_bank == "c":
         print("Exiting program")
         break
@@ -126,13 +121,13 @@ while v_boolean_bank_menu:
                     account1.num_withdrawals = trans_withdrawals
                     account1.account_status = "active"
                     if trans_withdrawals > MAX_WITHDRAWALS_W_O_PENALTY:
+                        # PENALTY
+                        # 1 $ after more than 4 withdrawals
                         v_service_charge = WITHDRAWAL_PENALTY
                         account1.monthly_service_charge = account1.monthly_service_charge + v_service_charge
-                        # print("Balance before PENALTY: " + str(account1.balance))
                         account1.balance = account1.balance - v_service_charge
                         v_balance = account1.balance
-                        # print("Balance after PENALTY: " + str(account1.balance))
-                        # 1 $ after more than 4 withdrawals
+
 
                 trans_list.append(
                         [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])

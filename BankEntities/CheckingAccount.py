@@ -13,28 +13,21 @@ from BankEntities.ClientAccount import ClientAccount
 
 
 class CheckingAccount(ClientAccount):
-    def __init__(self, bank_account, client_name, input_amount, operation_amount):
-        self.operation_amount = operation_amount
+    def __init__(self, bank_account, client_name, input_amount, checking_flag):
+        self.checking_flag = checking_flag
+        self.withdrawal_penalty = 15.00
         super().__init__(bank_account, client_name, input_amount)
 
     def withdraw(self, amount):
         self.account_status = "active"
+        self.checking_flag = True
         if self.balance - amount < 0:
-            print("Cannot withdraw")
-            self.balance = self.balance - 15
-            print("penalty 15.00 $")
+            # "Cannot withdraw"
+            # "Penalty $ 15.00"
+            self.balance = self.balance - self.withdrawal_penalty
+            self.monthly_service_charge = self.monthly_service_charge + self.withdrawal_penalty
+            self.checking_flag = False
         else:
             super().withdraw(amount)
+        return self.checking_flag
 
-
-# account1 = CheckingAccount("0002", "Check", "Husam kasem", 32000, 0)
-# # initializing the object account1
-# # account1.withdraw(50.00)
-# # calling the method withdraw for the account1 object
-# account1.withdraw(20)
-#
-# # run with debug both cases
-#
-# print(account1.balance)
-# print(account1.num_withdrawals)
-# print(account1.total_withdrawals)

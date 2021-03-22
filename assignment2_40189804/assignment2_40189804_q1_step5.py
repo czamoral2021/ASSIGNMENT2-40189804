@@ -17,7 +17,7 @@
 
 from BankEntities.ClientAccount import *
 
-client_1 = ClientAccount("0001", "Bassel Kotaish", 66000)
+client_1 = ClientAccount("0001", "Bassel Kotaish", 69000)
 client_2 = ClientAccount("0002", "Husam kasem", 32000)
 client_3 = ClientAccount("0003", "Hasan Abas", 67000)
 

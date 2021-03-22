@@ -15,8 +15,6 @@ class ClientAccount:
         self.account_status = "inactive"
         self.monthly_service_charge = 0
         self.annual_interest_rate = 0.001
-        # 2.4 % annual
-        # _ underscore means private, you cannot assign values directly, calculated values or keys
 
     def get_balance(self):
         return self.balance
@@ -81,9 +79,11 @@ class ClientAccount:
         x = datetime.datetime.now()
         first_day = x.replace(day=1)
         end_day = datetime.date(x.year + x.month // 12, x.month % 12 + 1, 1) - datetime.timedelta(1)
-        # print("Balance BEFORE MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
-        self.monthly_interest()
-        # print("Balance AFTER MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
+        if self.num_deposits > 0:
+            # Apply interests if there is/are deposit/deposits (Saving Account only)
+            # print("Balance BEFORE MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
+            self.monthly_interest()
+            # print("Balance AFTER MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
         print("------------------------------------------------------------------------------------------------------------")
         if x.strftime("%d") == end_day.strftime("%d"):
             print(x.strftime("%B") + " - End of month. Report date: " + x.strftime("%c"))
@@ -102,7 +102,8 @@ class ClientAccount:
         print(f"Number of withdrawals: {self.get_num_withdrawals()}")
         print("Total deposits {:,.2f} $".format(self.get_total_deposits()))
         print("Total withdrawals {:,.2f} $".format(self.get_total_withdrawals()))
-        print(f"Annual interest rate : {self.get_annual_interest_rate():.3f}")
+        if self.num_deposits > 0:
+            print(f"Annual interest rate : {self.get_annual_interest_rate():.3f}")
         print("Start Date: " + (x.strftime("%m")) + "-" + (first_day.strftime("%d")) + "-" + (x.strftime("%Y")))
         print("End Date: " + (end_day.strftime("%m")) + "-" + (end_day.strftime("%d")) + "-" + (end_day.strftime("%Y")))
         print("------------------------------------------------------------------------------------------------------------")

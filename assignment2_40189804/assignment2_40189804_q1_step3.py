@@ -39,6 +39,9 @@ v_amount = ""
 v_service_charge = 0
 v_balance = 0
 
+MAX_WITHDRAWALS_W_O_PENALTY = 4
+WITHDRAWAL_PENALTY = 1.00
+
 v_boolean_bank_menu = True
 v_boolean_account_menu = True
 while v_boolean_bank_menu:
@@ -76,14 +79,13 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric")
             else:
                 trans_type = "d"
-                # trans_amount = v_amount
-                print("AMOUNT: " + v_amount)
+                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                print("Balance deposit: " + str(account1.balance))
+                # print("Balance deposit: " + str(account1.balance))
                 account1.deposit(amount=float(v_amount))
-                print("Balance AFTER d: " + str(account1.balance))
+                # print("Balance AFTER d: " + str(account1.balance))
                 trans_number += 1
-                print("Flag :" + str(account1.saving_flag))
+                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The deposit is too low, the new balance should be greater than 25.00 $")
@@ -107,14 +109,13 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric")
             else:
                 trans_type = "w"
-                # trans_amount = v_amount
-                print("AMOUNT: " + v_amount)
+                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                print("Balance before w: " + str(account1.balance))
+                # print("Balance before w: " + str(account1.balance))
                 account1.withdraw(amount=float(v_amount))
-                print("Balance AFTER w: " + str(account1.balance))
+                # print("Balance AFTER w: " + str(account1.balance))
                 trans_number += 1
-                print("Flag :" + str(account1.saving_flag))
+                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The saving account balance is not above 25.00 $, no withdrawals allowed")
@@ -124,12 +125,13 @@ while v_boolean_bank_menu:
                     trans_withdrawals += 1
                     account1.num_withdrawals = trans_withdrawals
                     account1.account_status = "active"
-                    if trans_withdrawals > 4:
-                        v_service_charge = 1
-                        account1.monthly_service_charge = account1.monthly_service_charge + 1.00
-                        print("Balance before PENALTY: " + str(account1.balance))
+                    if trans_withdrawals > MAX_WITHDRAWALS_W_O_PENALTY:
+                        v_service_charge = WITHDRAWAL_PENALTY
+                        account1.monthly_service_charge = account1.monthly_service_charge + v_service_charge
+                        # print("Balance before PENALTY: " + str(account1.balance))
                         account1.balance = account1.balance - v_service_charge
-                        print("Balance after PENALTY: " + str(account1.balance))
+                        v_balance = account1.balance
+                        # print("Balance after PENALTY: " + str(account1.balance))
                         # 1 $ after more than 4 withdrawals
 
                 trans_list.append(
@@ -142,8 +144,14 @@ while v_boolean_bank_menu:
             for t in trans_list:
                 print("{0:8}".format(t[0]) + "|", end="")
                 if t[1] == "d":
-                    print("{:16,.2f} $".format(float(t[2])) + "|", end="")
-                    print("{0:17}".format(" ") + "|", end="")
+                    if t[6]:
+                        print("{:16,.2f} $".format(float(t[2])) + "|", end="")
+                        print("{0:17}".format(" ") + "|", end="")
+                    else:
+                        print("{:16,.2f} $".format(float(t[2])) + "|", end="")
+                        # deposit too low, balance below $ 25
+                        # print("{0:17}".format(" ") + "|", end="")
+                        print("<--Cannot deposit" + "|", end="")
                 elif t[1] == "w":
                     if t[6]:
                         print("{0:18}".format(" ") + "|", end="")
@@ -157,7 +165,6 @@ while v_boolean_bank_menu:
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
                 account1.balance = v_balance
-                # account1.saving_flag = trans_flag
         elif menu_account == "D" or menu_account == "d":
             print("Go to previous menu")
             break

@@ -81,8 +81,9 @@ class ClientAccount:
         x = datetime.datetime.now()
         first_day = x.replace(day=1)
         end_day = datetime.date(x.year + x.month // 12, x.month % 12 + 1, 1) - datetime.timedelta(1)
-        if x.day == end_day.day:
-            self.monthly_interest()
+        # print("Balance BEFORE MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
+        self.monthly_interest()
+        # print("Balance AFTER MONTHLY INTEREST: " + "{:,.7f} $".format(self.get_balance()))
         print("------------------------------------------------------------------------------------------------------------")
         if x.strftime("%d") == end_day.strftime("%d"):
             print(x.strftime("%B") + " - End of month. Report date: " + x.strftime("%c"))

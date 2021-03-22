@@ -42,6 +42,10 @@ v_balance = 0
 
 v_boolean_bank_menu = True
 v_boolean_account_menu = True
+
+MAX_WITHDRAWALS_W_O_PENALTY = 4
+WITHDRAWAL_PENALTY = 1.00
+
 while v_boolean_bank_menu:
     # Bank Menu This leads to
     # another menu (account menu)
@@ -106,14 +110,15 @@ while v_boolean_bank_menu:
                 trans_withdrawals += 1
                 account1.account_status = "active"
                 account1.num_withdrawals = trans_withdrawals
-                if trans_withdrawals > 4:
-                    v_service_charge = 1
-                    account1.monthly_service_charge = account1.monthly_service_charge + 1.00
+                if trans_withdrawals > MAX_WITHDRAWALS_W_O_PENALTY:
+                    v_service_charge = WITHDRAWAL_PENALTY
+                    account1.monthly_service_charge = account1.monthly_service_charge + v_service_charge
                     print("Balance before PENALTY: " + str(account1.balance))
                     account1.balance = account1.balance - v_service_charge
+                    v_balance = account1.balance
                     print("Balance after PENALTY: " + str(account1.balance))
                     # 1 $ after more than 4 withdrawals
-                v_balance = account1.balance
+
                 trans_list.append(
                         [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance])
                 # list first position is zero (0) transaction # and transaction amount for each element on the list

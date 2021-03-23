@@ -22,7 +22,7 @@ import datetime
 
 from BankEntities.CheckingAccount import CheckingAccount
 
-account2 = CheckingAccount("0001", "Bassel Kotaish", 100, True)
+account2 = CheckingAccount("0002", "Bassel Kotaish", 100, True)
 
 
 trans_number = 0
@@ -35,7 +35,6 @@ trans_type = ""
 v_amount = ""
 v_service_charge = 0
 v_balance = 0
-
 
 WITHDRAWAL_FEE = 0.10
 MONTHLY_WITHDRAWALS_FEE = 5.00
@@ -70,9 +69,8 @@ while v_boolean_bank_menu:
             print("Working with " + v_account_type.upper() + " MENU - B: Withdrawals")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
-            if not v_amount.isnumeric():
-                print("Operation amount is not numeric")
-
+            if not v_amount.isnumeric() or v_amount == str(0):
+                print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
                 # print("AMOUNT: " + v_amount)
@@ -98,15 +96,23 @@ while v_boolean_bank_menu:
 
                 trans_list.append(
                 [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
-                    # list first position is zero (0) transaction # and transaction amount for each element on the list
+                # list first position is zero (0) transaction # and transaction amount for each element on the list
 
         elif menu_account.upper() == "C":
             print("Working with " + v_account_type.upper() + " MENU - C: Report")
+            while True:
+                monthly_report_now = input("Report with Monthly Fee now (Y/N)? - "
+                                       "uppercase and lowercase, otherwise invalid > ")
+                if monthly_report_now.upper() == "Y" or monthly_report_now.upper() == "N":
+                    break
+                else:
+                    continue
             # At least 1 withdrawal to apply MONTHLY_WITHDRAWALS_FEE for the Monthly Report
             # MONTHLY_WITHDRAWALS_FEE => $ 5.00
-            if len(trans_list) >= 1:
+            if len(trans_list) >= 1 and monthly_report_now.upper() == "Y":
                 account2.balance = v_balance - MONTHLY_WITHDRAWALS_FEE
                 account2.monthly_service_charge = account2.monthly_service_charge + MONTHLY_WITHDRAWALS_FEE
+            account2.account_type = v_account_type
             account2.monthly_report()
             for t in trans_list:
                 print("{0:8}".format(t[0]) + "|", end="")

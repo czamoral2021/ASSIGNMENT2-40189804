@@ -71,8 +71,8 @@ while v_boolean_bank_menu:
             print("Working with " + v_account_type.upper() + " MENU - A: Deposit")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
-            if not v_amount.isnumeric():
-                print("Operation amount is not numeric")
+            if not v_amount.isnumeric() or v_amount == str(0):
+                print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "d"
                 # print("AMOUNT: " + v_amount)
@@ -101,8 +101,8 @@ while v_boolean_bank_menu:
             print("Working with " + v_account_type.upper() + " MENU - B: Withdrawals")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
-            if not v_amount.isnumeric():
-                print("Operation amount is not numeric")
+            if not v_amount.isnumeric() or v_amount == str(0):
+                print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
                 # print("AMOUNT: " + v_amount)

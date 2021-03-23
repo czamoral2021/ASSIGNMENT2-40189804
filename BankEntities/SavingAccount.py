@@ -43,26 +43,15 @@ class SavingAccount(ClientAccount):
                 super().deposit(amount)
                 self.saving_flag = True
             else:
-                # print("The deposit is too low, the new balance should be greater than 25.00 $")
+                # "The deposit is too low, the new balance should be greater than 25.00 $"
                 self.saving_flag = False
         elif self.balance + amount > 25:
             super().deposit(amount)
             self.saving_flag = True
         else:
-            # print("The deposit is too low, the new balance should be greater than 25.00 $")
+            # "The deposit is too low, the new balance should be greater than 25.00 $"
             self.account_status = "inactive"
             self.saving_flag = False
         return self.saving_flag
 
 
-# account1 = SavingAccount("0002", "Check", "Husam kasem", 21, 0)
-# # initializing the object account1
-# # account1.withdraw(50.00)
-# # calling the method withdraw for the account1 object
-# account1.deposit(5)
-#
-# # run with debug both cases
-#
-# print(account1.balance)
-# print(account1.num_deposits)
-# print(account1.total_deposits)

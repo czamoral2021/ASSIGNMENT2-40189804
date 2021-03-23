@@ -22,7 +22,7 @@ import datetime
 
 from BankEntities.CheckingAccount import CheckingAccount
 
-account1 = CheckingAccount("0001", "Bassel Kotaish", 100, True)
+account2 = CheckingAccount("0001", "Bassel Kotaish", 100, True)
 
 
 trans_number = 0
@@ -52,6 +52,7 @@ while v_boolean_bank_menu:
     menu_bank = input("Enter a valid choice - uppercase and lowercase, invalid --> Main Menu > ")
     if menu_bank == "B" or menu_bank == "b":
         v_account_type = "Checking"
+        account2.account_type = "Checking"
     elif menu_bank == "C" or menu_bank == "c":
         print("Exiting program")
         break
@@ -76,26 +77,27 @@ while v_boolean_bank_menu:
                 trans_type = "w"
                 # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance before w: " + str(account1.balance))
-                account1.withdraw(amount=float(v_amount))
-                # print("Flag :" + str(account1.checking_flag))
+                # print("Balance before w: " + str(account2.balance))
+                account2.withdraw(amount=float(v_amount))
+                # print("Flag :" + str(account2.checking_flag))
                 trans_number += 1
-                trans_flag = account1.checking_flag
-                if not account1.checking_flag:
+                trans_flag = account2.checking_flag
+                if not account2.checking_flag:
                     print("Checking account balance below 0.00 $, no withdrawals allowed and $ 15 Penalty")
-                    v_balance = account1.balance
-                elif account1.checking_flag:
+                    v_balance = account2.balance
+                    v_service_charge = account2.withdrawal_penalty
+                elif account2.checking_flag:
                     trans_withdrawals += 1
-                    account1.num_withdrawals = trans_withdrawals
+                    account2.num_withdrawals = trans_withdrawals
                     # WITHDRAWAL_FEE
                     # $ 0.10
                     v_service_charge = WITHDRAWAL_FEE
-                    account1.monthly_service_charge = account1.monthly_service_charge + v_service_charge
-                    account1.balance = account1.balance - v_service_charge
-                    v_balance = account1.balance
+                    account2.monthly_service_charge = account2.monthly_service_charge + v_service_charge
+                    account2.balance = account2.balance - v_service_charge
+                    v_balance = account2.balance
 
-                    trans_list.append(
-                        [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
+                trans_list.append(
+                [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
                     # list first position is zero (0) transaction # and transaction amount for each element on the list
 
         elif menu_account.upper() == "C":
@@ -103,9 +105,9 @@ while v_boolean_bank_menu:
             # At least 1 withdrawal to apply MONTHLY_WITHDRAWALS_FEE for the Monthly Report
             # MONTHLY_WITHDRAWALS_FEE => $ 5.00
             if len(trans_list) >= 1:
-                account1.monthly_service_charge = account1.monthly_service_charge + MONTHLY_WITHDRAWALS_FEE
-                account1.balance = account1.balance - account1.monthly_service_charge
-            account1.monthly_report()
+                account2.balance = v_balance - MONTHLY_WITHDRAWALS_FEE
+                account2.monthly_service_charge = account2.monthly_service_charge + MONTHLY_WITHDRAWALS_FEE
+            account2.monthly_report()
             for t in trans_list:
                 print("{0:8}".format(t[0]) + "|", end="")
                 if t[1] == "d":
@@ -122,14 +124,14 @@ while v_boolean_bank_menu:
                         print("{0:18}".format(" ") + "|", end="")
                         print("{:15,.2f} $".format(float(t[2])) + "|", end="")
                     else:
-                        print("Cannot withdraw-->" + "|", end="")
+                        print("Penalty withdraw->" + "|", end="")
                         # Cannot withdraw
                         print("{:15,.2f} $".format(float(t[2])) + "|", end="")
                 print("{:15,.2f} $".format(float(t[3])) + "|", end="")
                 print("{}".format(t[4].strftime("%c")) + "  |", end="")
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
-                account1.balance = v_balance
+                account2.balance = v_balance
         elif menu_account == "D" or menu_account == "d":
             print("Go to previous menu")
             break

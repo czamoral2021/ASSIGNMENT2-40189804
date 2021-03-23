@@ -52,7 +52,8 @@ while v_boolean_bank_menu:
     print("C: Exit")
     menu_bank = input("Enter a valid choice - uppercase and lowercase, invalid --> Main Menu > ")
     if menu_bank == "A" or menu_bank == "a":
-        v_account_type = "Savings"
+        v_account_type = "Saving"
+        account1.account_type = "Saving"
     elif menu_bank == "C" or menu_bank == "c":
         print("Exiting program")
         break
@@ -93,7 +94,7 @@ while v_boolean_bank_menu:
                     account1.account_status = "active"
 
                 trans_list.append(
-                        [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
+                [trans_number, trans_type, v_amount, v_service_charge, v_operation_date, v_balance, trans_flag])
                 # list first position is zero (0) transaction # and transaction amount for each element on the list
 
         elif menu_account.upper() == "B":

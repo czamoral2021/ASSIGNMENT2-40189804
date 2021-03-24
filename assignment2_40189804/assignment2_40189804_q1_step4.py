@@ -16,8 +16,6 @@
 
 # Exercise with a Checking account, multiple transactions (Withdrawals and Monthly Report)
 
-# from BankEntities.ClientAccount import *
-
 import datetime
 
 from BankEntities.CheckingAccount import CheckingAccount
@@ -38,6 +36,7 @@ v_balance = 0
 
 WITHDRAWAL_FEE = 0.10
 MONTHLY_WITHDRAWALS_FEE = 5.00
+monthly_fee_now = ""
 
 v_boolean_bank_menu = True
 v_boolean_account_menu = True
@@ -50,6 +49,18 @@ while v_boolean_bank_menu:
     print("C: Exit")
     menu_bank = input("Enter a valid choice - uppercase and lowercase, invalid --> Main Menu > ")
     if menu_bank == "B" or menu_bank == "b":
+        if monthly_fee_now.upper() == "Y":
+            # initialize account and variables
+            account2 = CheckingAccount("0002", "Bassel Kotaish", 100, True)
+            trans_number = 0
+            trans_flag = True
+            trans_withdrawals = 0
+            trans_deposits = 0
+            trans_list = []
+            trans_type = ""
+            v_amount = ""
+            v_service_charge = 0
+            v_balance = 0
         v_account_type = "Checking"
         account2.account_type = "Checking"
     elif menu_bank == "C" or menu_bank == "c":
@@ -73,11 +84,8 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance before w: " + str(account2.balance))
                 account2.withdraw(amount=float(v_amount))
-                # print("Flag :" + str(account2.checking_flag))
                 trans_number += 1
                 trans_flag = account2.checking_flag
                 if not account2.checking_flag:
@@ -100,16 +108,17 @@ while v_boolean_bank_menu:
 
         elif menu_account.upper() == "C":
             print("Working with " + v_account_type.upper() + " MENU - C: Report")
-            while True:
-                monthly_report_now = input("Report with Monthly Fee now (Y/N)? - "
-                                       "uppercase and lowercase, otherwise invalid > ")
-                if monthly_report_now.upper() == "Y" or monthly_report_now.upper() == "N":
-                    break
-                else:
-                    continue
+            if len(trans_list) >= 1:
+                while True:
+                    monthly_fee_now = input("Report with Monthly Fee now (Y/N)? - "
+                                        "uppercase and lowercase, otherwise invalid > ")
+                    if monthly_fee_now.upper() == "Y" or monthly_fee_now.upper() == "N":
+                        break
+                    else:
+                        continue
             # At least 1 withdrawal to apply MONTHLY_WITHDRAWALS_FEE for the Monthly Report
             # MONTHLY_WITHDRAWALS_FEE => $ 5.00
-            if len(trans_list) >= 1 and monthly_report_now.upper() == "Y":
+            if len(trans_list) >= 1 and monthly_fee_now.upper() == "Y":
                 account2.balance = v_balance - MONTHLY_WITHDRAWALS_FEE
                 account2.monthly_service_charge = account2.monthly_service_charge + MONTHLY_WITHDRAWALS_FEE
             account2.account_type = v_account_type
@@ -123,7 +132,6 @@ while v_boolean_bank_menu:
                     else:
                         print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                         # deposit too low, balance below $ 25
-                        # print("{0:17}".format(" ") + "|", end="")
                         print("<--Cannot deposit" + "|", end="")
                 elif t[1] == "w":
                     if t[6]:
@@ -138,7 +146,12 @@ while v_boolean_bank_menu:
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
                 account2.balance = v_balance
-        elif menu_account == "D" or menu_account == "d":
+            if monthly_fee_now.upper() == "Y":
+                break
+            else:
+                monthly_fee_now = ""
+                continue
+        elif menu_account.upper == "D":
             print("Go to previous menu")
             break
         else:

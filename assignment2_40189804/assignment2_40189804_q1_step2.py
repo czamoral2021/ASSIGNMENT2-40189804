@@ -75,15 +75,13 @@ while v_boolean_bank_menu:
             print("Working with " + v_account_type.upper() + " MENU - A: Deposit")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
-            if not v_amount.isnumeric():
-                print("Operation amount is not numeric")
+            if not v_amount.isnumeric() or v_amount == str(0):
+                print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "d"
                 v_operation_date = datetime.datetime.now()
-                print("Balance deposit: " + str(account1.balance))
                 account1.deposit(amount=float(v_amount))
                 account1.daily_interest()
-                print("Balance AFTER d: " + str(account1.balance))
                 trans_number += 1
                 trans_deposits += 1
                 account1.account_status = "active"
@@ -97,14 +95,12 @@ while v_boolean_bank_menu:
             print("Working with " + v_account_type.upper() + " MENU - B: Withdrawals")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
-            if not v_amount.isnumeric():
-                print("Operation amount is not numeric")
+            if not v_amount.isnumeric() or v_amount == str(0):
+                print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
                 v_operation_date = datetime.datetime.now()
-                print("Balance before w: " + str(account1.balance))
                 account1.withdraw(amount=float(v_amount))
-                print("Balance AFTER w: " + str(account1.balance))
                 v_balance = account1.balance
                 trans_number += 1
                 trans_withdrawals += 1
@@ -113,10 +109,8 @@ while v_boolean_bank_menu:
                 if trans_withdrawals > MAX_WITHDRAWALS_W_O_PENALTY:
                     v_service_charge = WITHDRAWAL_PENALTY
                     account1.monthly_service_charge = account1.monthly_service_charge + v_service_charge
-                    print("Balance before PENALTY: " + str(account1.balance))
                     account1.balance = account1.balance - v_service_charge
                     v_balance = account1.balance
-                    print("Balance after PENALTY: " + str(account1.balance))
                     # 1 $ after more than 4 withdrawals
 
                 trans_list.append(

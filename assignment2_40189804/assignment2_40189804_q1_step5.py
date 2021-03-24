@@ -20,7 +20,8 @@
 # Exercise with a Savings account, multiple transactions (Deposits, Withdrawals, etc)
 # for each deposit it will add a daily interest
 
-# from BankEntities.ClientAccount import *
+# Exercise with a Checking account, multiple transactions (Withdrawals and Monthly Report)
+
 import datetime
 
 from BankEntities.SavingAccount import SavingAccount
@@ -46,6 +47,7 @@ WITHDRAWAL_PENALTY = 1.00
 
 WITHDRAWAL_FEE = 0.10
 MONTHLY_WITHDRAWALS_FEE = 5.00
+monthly_fee_now = ""
 
 v_boolean_bank_menu = True
 v_boolean_account_menu = True
@@ -73,7 +75,7 @@ while v_boolean_bank_menu:
         v_account_type = "Saving"
         account1.account_type = "Saving"
     elif menu_bank == "B" or menu_bank == "b":
-        if v_account_type == "Saving":
+        if v_account_type == "Saving" or monthly_fee_now.upper() == "Y":
             # initialize account and variables
             account2 = CheckingAccount("0002", "Bassel Kotaish", 100, True)
             trans_number = 0
@@ -92,7 +94,7 @@ while v_boolean_bank_menu:
         break
     else:
         continue
-    # print("Account type :" + v_account_type)
+
     # Working with account type now
     while v_boolean_account_menu:
         print(v_account_type.upper() + " MENU")
@@ -103,7 +105,6 @@ while v_boolean_bank_menu:
         print("D: Go back to BANK MENU")
         menu_account = input("Enter a valid choice - uppercase and lowercase, invalid --> Bank Menu > ")
         if v_account_type == "Saving" and menu_account.upper() == "A":
-            # if menu_account.upper() == "A":
             print("Working with " + v_account_type.upper() + " MENU - A: Deposit")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
@@ -111,13 +112,9 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "d"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance deposit: " + str(account1.balance))
                 account1.deposit(amount=float(v_amount))
-                # print("Balance AFTER d: " + str(account1.balance))
                 trans_number += 1
-                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The deposit is too low, the new balance should be greater than 25.00 $")
@@ -141,13 +138,9 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance before w: " + str(account1.balance))
                 account1.withdraw(amount=float(v_amount))
-                # print("Balance AFTER w: " + str(account1.balance))
                 trans_number += 1
-                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The saving account balance is not above 25.00 $, no withdrawals allowed")
@@ -182,7 +175,6 @@ while v_boolean_bank_menu:
                     else:
                         print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                         # deposit too low, balance below $ 25
-                        # print("{0:17}".format(" ") + "|", end="")
                         print("<--Cannot deposit" + "|", end="")
                 elif t[1] == "w":
                     if t[6]:
@@ -197,9 +189,13 @@ while v_boolean_bank_menu:
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
                 account1.balance = v_balance
+            continue
+        elif v_account_type == "Saving" and menu_account.upper == "D":
+            print("Go to previous menu")
+            break
 
         # "Checking SECTION"
-        if v_account_type == "Checking" and menu_account.upper() == "B":
+        elif v_account_type == "Checking" and menu_account.upper() == "B":
             print("Working with " + v_account_type.upper() + " MENU - B: Withdrawals")
             v_amount = input("Operation amount, please > ")
             # validate the operation amount
@@ -207,11 +203,8 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance before w: " + str(account2.balance))
                 account2.withdraw(amount=float(v_amount))
-                # print("Flag :" + str(account2.checking_flag))
                 trans_number += 1
                 trans_flag = account2.checking_flag
                 if not account2.checking_flag:
@@ -234,16 +227,17 @@ while v_boolean_bank_menu:
 
         elif v_account_type == "Checking" and menu_account.upper() == "C":
             print("Working with " + v_account_type.upper() + " MENU - C: Report")
-            while True:
-                monthly_report_now = input("Report with Monthly Fee now (Y/N)? - "
+            if len(trans_list) >= 1:
+                while True:
+                    monthly_fee_now = input("Report with Monthly Fee now (Y/N)? - "
                                        "uppercase and lowercase, otherwise invalid > ")
-                if monthly_report_now.upper() == "Y" or monthly_report_now.upper() == "N":
-                    break
-                else:
-                    continue
+                    if monthly_fee_now.upper() == "Y" or monthly_fee_now.upper() == "N":
+                        break
+                    else:
+                        continue
             # At least 1 withdrawal to apply MONTHLY_WITHDRAWALS_FEE for the Monthly Report
             # MONTHLY_WITHDRAWALS_FEE => $ 5.00
-            if len(trans_list) >= 1 and monthly_report_now.upper() == "Y":
+            if len(trans_list) >= 1 and monthly_fee_now.upper() == "Y":
                 account2.balance = v_balance - MONTHLY_WITHDRAWALS_FEE
                 account2.monthly_service_charge = account2.monthly_service_charge + MONTHLY_WITHDRAWALS_FEE
             account2.account_type = v_account_type
@@ -257,7 +251,6 @@ while v_boolean_bank_menu:
                     else:
                         print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                         # deposit too low, balance below $ 25
-                        # print("{0:17}".format(" ") + "|", end="")
                         print("<--Cannot deposit" + "|", end="")
                 elif t[1] == "w":
                     if t[6]:
@@ -272,9 +265,12 @@ while v_boolean_bank_menu:
                 print("{:15,.2f} $".format(float(t[5])))
                 print("-" * 109)
                 account2.balance = v_balance
-
-        # elif v_account_type == "Saving" and menu_account.upper == "D":
-        elif menu_account.upper == "D":
+            if monthly_fee_now.upper() == "Y":
+                break
+            else:
+                monthly_fee_now = ""
+                continue
+        elif v_account_type == "Checking" and menu_account.upper == "D":
             print("Go to previous menu")
             break
         else:

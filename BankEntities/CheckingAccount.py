@@ -11,7 +11,6 @@ from BankEntities.ClientAccount import ClientAccount
 # the customer will owe the negative amount to the bank.
 
 
-
 class CheckingAccount(ClientAccount):
     def __init__(self, bank_account, client_name, input_amount, checking_flag):
         self.checking_flag = checking_flag

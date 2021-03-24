@@ -20,7 +20,6 @@
 # Exercise with a Savings account, multiple transactions (Deposits, Withdrawals, etc)
 # for each deposit it will add a daily interest
 
-# from BankEntities.ClientAccount import *
 import datetime
 
 from BankEntities.SavingAccount import SavingAccount
@@ -75,13 +74,9 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "d"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance deposit: " + str(account1.balance))
                 account1.deposit(amount=float(v_amount))
-                # print("Balance AFTER d: " + str(account1.balance))
                 trans_number += 1
-                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The deposit is too low, the new balance should be greater than 25.00 $")
@@ -105,13 +100,9 @@ while v_boolean_bank_menu:
                 print("Operation amount is not numeric or equal zero")
             else:
                 trans_type = "w"
-                # print("AMOUNT: " + v_amount)
                 v_operation_date = datetime.datetime.now()
-                # print("Balance before w: " + str(account1.balance))
                 account1.withdraw(amount=float(v_amount))
-                # print("Balance AFTER w: " + str(account1.balance))
                 trans_number += 1
-                # print("Flag :" + str(account1.saving_flag))
                 trans_flag = account1.saving_flag
                 if not account1.saving_flag:
                     print("The saving account balance is not above 25.00 $, no withdrawals allowed")
@@ -146,7 +137,6 @@ while v_boolean_bank_menu:
                     else:
                         print("{:16,.2f} $".format(float(t[2])) + "|", end="")
                         # deposit too low, balance below $ 25
-                        # print("{0:17}".format(" ") + "|", end="")
                         print("<--Cannot deposit" + "|", end="")
                 elif t[1] == "w":
                     if t[6]:
